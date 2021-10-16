@@ -15,7 +15,9 @@ public class Rocket extends GameObject {
     private double speedY = 0;
     private double speedX = 0;
 
+
     private double boost = 0.05;
+    private double slowdown = boost / 10;
 
 
     public  Rocket(double x, double y){
@@ -23,16 +25,17 @@ public class Rocket extends GameObject {
     }
 
     public void move(boolean isUpPressed, boolean isLeftPressed, boolean isRightPressed){
-        /*4. В методе move(boolean, boolean, boolean) значение поля speedY должно уменьшаться на значение boost, если параметр метода isUpPressed равен true.
-        5. В методе move(boolean, boolean, boolean) значение поля speedY должно увеличиваться на значение boost, если параметр метода isUpPressed равен false.
+        /*2. В методе move(boolean, boolean, boolean) полю speedX должно устанавливаться значение 0, если параметр метода
+        isLeftPressed равен false и параметр метода isRightPressed равен false и значение поля speedX находится в диапазоне от (-slowdown) до slowdown включительно.
 
-        6. В методе move(boolean, boolean, boolean) значение поля y должно быть увеличено на значение speedY после того, как поле speedY было изменено.
+3. В методе move(boolean, boolean, boolean) поле speedX должно уменьшаться на значение slowdown, если параметр метода
+isLeftPressed равен false, параметр метода isRightPressed равен false и значение поля speedX больше значения slowdown.
 
-        7. В методе move(boolean, boolean, boolean) значение поля speedX должно уменьшаться на значение boost, если параметр метода isLeftPressed равен true.
+4. В методе move(boolean, boolean, boolean) поле speedX должно увеличиваться на значение slowdown, если параметр метода
+ isLeftPressed равен false, параметр метода isRightPressed равен false и значение поля speedX меньше значения (-slowdown).
 
-        8. В методе move(boolean, boolean, boolean) значение поля speedX должно увеличиваться на значение boost, если параметр метода isRightPressed равен true.
-
-        9. В методе move(boolean, boolean, boolean) значение поля x должно быть увеличено на значение speedX после того, как поле speedX было изменено.*/
+5. В методе move(boolean, boolean, boolean) поле x должно быть увеличено на значение speedX после того, как поле speedX
+ было изменено, и до вызова метода checkBorders().*/
         if(isUpPressed){
             speedY -= boost;
             y += speedY;
@@ -51,16 +54,29 @@ public class Rocket extends GameObject {
             x += speedX;
         };
 
+        if(!isLeftPressed && !isRightPressed ){
+            if(speedX >= -slowdown && speedX <= slowdown){
+                speedX = 0;
+            } else  if(!isLeftPressed && !isRightPressed){
+                if (speedX > slowdown){
+                    speedX -= slowdown;
+                    x += speedX;
+
+                }else if(speedX < -slowdown){
+                    speedX += slowdown;
+                    x += speedX;
+
+                }
+            }
+        }
+
+
         checkBorders();
     }
 
     private void checkBorders(){
-        /*2. В методе checkBorders(), если значение поля x меньше нуля, установи ему значение 0.
-3. В методе checkBorders(), если значение поля x меньше нуля, установи полю speedX значение 0.
-4. В методе checkBorders(), если сумма значений полей x и width больше ширины игрового поля MoonLanderGame.WIDTH, установи полю x значение (MoonLanderGame.WIDTH - width).
-5. В методе checkBorders(), если сумма значений полей x и width больше ширины игрового поля MoonLanderGame.WIDTH, установи полю speedX значение 0.
-6. В методе checkBorders(), если значение поля y меньше нуля, установи ему значение 0.
-7. В методе checkBorders(), если значение поля y меньше нуля, установи полю speedY значение 0.*/
+
+
         if(x < 0){
             x = 0;
             speedX = 0;
